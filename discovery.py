@@ -37,7 +37,13 @@ class LCP(object):
     def __repr__(self):
         return "%s %s"%(self.name,self.items )
 
-
+class DD(object):
+    def __init__(self,rhs:str,lhs:str):
+        self.rhs = rhs
+        self.lhs = lhs
+        #self.items = items
+    def __repr__(self):
+        return "%s %s"%(self.lhs,self.rhs)
 
 class Item(object):
     def __init__(self,itemname:str,sigma:float,item:list):
