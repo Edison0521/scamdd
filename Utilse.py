@@ -1,6 +1,19 @@
 import pandas as pd
 import difflib
 import itertools
+import math
+import numpy as np
+
+def calculate_delta(arr, confidence):
+    n = len(arr)
+    removals = n - round(n * confidence)
+    best_delta = arr[-1] - arr[0]
+
+    # removing outliers in such a way that minimize delta:
+    for i in range(removals + 1):
+         best_delta = min(best_delta, arr[-(removals - i + 1)] - arr[i])
+
+    return best_delta
 
 def is_nan(nan):
     return nan != nan
@@ -15,7 +28,21 @@ def splitstr(s: str):
         temp1.append(litter)
     return temp1
 
-
+def DDsimilars(l1,l2):
+    t = l1
+    #print(l1,l2)
+    if type(l1) and type(l2) in [np.int, np.int32, np.int64]:
+        #print(2)
+        m = abs(l1 - l2)
+        return m
+    else:
+        #print(1)
+        d = difflib.SequenceMatcher(None, l1,l2).quick_ratio()
+        max_num = max(len(l1),len(l2)) * d
+        min_num = min(len(l1),len(l2)) * d
+        #print(max_num,min_num)
+        m = math.ceil(max_num-min_num)
+        return m
 def similars(sigma : float,l1,l2):
     t = l1
     #print(l1,l2)
@@ -62,6 +89,19 @@ def addthresord(title: list):
         m = int(input())
         for j in range(0, m):
             print("Please enter the allowed range：")
+            sigma = float(input())
+            temp.append(sigma)
+        list.append(temp)
+    print(list)
+    return list
+def addthresords(title: list):
+    list = []
+    for i in range(len(title)):
+        temp = []
+        #print("Please enter how many segments you want to divide the " + title[i] + " into:")
+        m = 1
+        for j in range(0, m):
+            print("Please enter the allowed distance of：",title[i])
             sigma = float(input())
             temp.append(sigma)
         list.append(temp)
@@ -123,6 +163,7 @@ def maxclsuster(file,clomname,thresord):
                 pr = i
                 pl = j
                 judge = s[pl][1] - s[pr][1]
+                #print(type(judge))
                 if judge < thresord:
                     # print(s[pl][1],s[pr][1])
                     # print(s[pl][0], s[pr][0])
